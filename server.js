@@ -5,6 +5,7 @@ import sassMiddleware from 'node-sass-middleware';
 import path from 'path'; 
 //import fs from 'fs';
 
+
 const server = express();
 
 // sass compiled by node
@@ -16,10 +17,23 @@ server.use(sassMiddleware({
 // by default looks in ./views/*.ejs - templates
 server.set('view engine', 'ejs')
 
+import serverRender from './serverRender';
+
 server.get('/', (req, res) => {
-    //res.send('Hello!');
-    res.render('index')
-})
+    // renders <App init={res.data.contests} /> component as a string
+    // destructure returned obj from serverRender
+    // initMarkup displayed on page
+    // initData store data to window
+    serverRender()
+    .then(({initData, initMarkup}) => {
+        res.render('index', {
+            initData,
+            initMarkup
+        })
+    })
+    .catch(console.error)
+    
+});
 
 server.use(express.static('public'))
 
@@ -32,7 +46,8 @@ server.use('/api', apiRouter)
 //     })
 // })
 
-server.listen(config.port, () => {
+server.listen(config.port, config.host, () => {
     console.log('Express is listening on: ', config.port);
+    console.log('Express is listening on: ', config.host);
 });
 

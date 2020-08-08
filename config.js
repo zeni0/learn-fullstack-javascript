@@ -10,10 +10,18 @@ export const logStars = function(message) {
 
 // 0.0.0.0 will bind to all API on the machine
 // serverURL ready to consume as a property
+// export default {
+//   port: env.PORT || 8080,
+//   host: env.HOST || '0.0.0.0',
+//   get serverURL() {
+//     return `http://${this.host}:${this.port}`
+//   }
+// };
 export default {
+  mongodbUri: 'mongodb://localhost:27017/test',
   port: env.PORT || 8080,
   host: env.HOST || '0.0.0.0',
   get serverURL() {
-    return `http://${this.host}:${this.port}`
+    return `http://${this.host}:${this.port}`;
   }
 };

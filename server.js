@@ -1,8 +1,9 @@
-import config from './config';
 import express from 'express';
-import apiRouter from './api';
 import sassMiddleware from 'node-sass-middleware';
-import path from 'path'; 
+import path from 'path';
+import config from './config';
+import apiRouter from './api';
+import serverRender from './serverRender'; 
 //import fs from 'fs';
 
 
@@ -17,14 +18,18 @@ server.use(sassMiddleware({
 // by default looks in ./views/*.ejs - templates
 server.set('view engine', 'ejs')
 
-import serverRender from './serverRender';
 
-server.get('/', (req, res) => {
+
+server.get(['/', '/contest/:contestId'], (req, res) => {
     // renders <App init={res.data.contests} /> component as a string
     // destructure returned obj from serverRender
     // initMarkup displayed on page
     // initData store data to window
-    serverRender()
+    
+    // localhost:8080 request goes to here
+    // serverRender before React has rendered
+    //console.log('request',req);
+    serverRender(req.params.contestId)
     .then(({initData, initMarkup}) => {
         res.render('index', {
             initData,
